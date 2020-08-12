@@ -4,7 +4,7 @@ const router  = express.Router();
 const chatmessageController = require("../controllers/chatmessage");
 
 // POST /send chat message
-router.post("/:recipientId/message", chatmessageController.postMessage) 
+router.post("/message", chatmessageController.postMessage) 
 
 
 module.exports = router;

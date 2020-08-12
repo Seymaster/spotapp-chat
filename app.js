@@ -4,21 +4,19 @@ const logger  = require("morgan");
 const mongoose = require("mongoose");
 const http     = require("http");
 const app      = express();
-const PORT     = process.env.PORT || 8080;
 const mongo    = require("./configs/mongo");
 const chatmessageRouter = require("./routes/chatmessage");
-const { format } = require("path");
+const path = require("path");
 
 
 mongoose.Promise = global.Promise;
 
 
-app.set('port', PORT);
-
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", chatmessageRouter);
 
 mongoose.connect(mongo.dbUrl,
@@ -39,28 +37,35 @@ app.use('*',(req,res,next)=>{
 })
 
 
-const server = http.createServer(app).listen(PORT, ()=>{
-    console.log("Express server listening on port " + PORT);
-});
-
+const server = http.createServer(app)
 const io    = require("socket.io").listen(server);
 
-let users = []
 
+let users = []
 // Handles socket traffic
 io.on("connection", (socket) =>{
-    
+    console.log("New Connection")
     socket.on('connect', ()=>{
-        console.log("New connection to socket: ",socket.io)
+        console.log("New connection to socket: ", socket.id)
+    });
+
+    socket.on('welcome', (data)=>{
+        chatModel.save(data)
+        console.log("Welcome", data, socket.id)
     });
     
 
     socket.on("chat", data =>{
+
         console.log(data)
-        const user = getCurrentUser(socket.id);
-        io.to(user.id).emit("chatmessage", format(user.username,data))
+        socket.emit("new-message", )
     })
 });
 
 
+const PORT     = process.env.PORT || 8080;
+
+server.listen(PORT, ()=>{
+    console.log("Express server listening on port " + PORT);
+});
 
