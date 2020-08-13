@@ -17,7 +17,7 @@ app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 // app.use(express.static(path.join(__dirname, 'public')));
-app.use("/", chatmessageRouter);
+app.use("/api/v1", chatmessageRouter);
 
 mongoose.connect(mongo.dbUrl,
     {useNewUrlParser: true, useUnifiedTopology: true}
