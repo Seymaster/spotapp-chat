@@ -4,7 +4,7 @@ const router  = express.Router();
 // const chatmessageController = require("../controllers/chatmessage");
 
 // POST /send chat message
-router.post("/message", (req,res,next)=>{
+router.get("/message", (req,res,next)=>{
     console.log("Socket is opened")
 })
 
